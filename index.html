@@ -223,8 +223,10 @@ async function send() {
   }
 
   const data = {
+    const rawPhone = document.getElementById('phone').value;
+  const cleanPhone = rawPhone.replace(/\D/g, '');
     manager: document.getElementById('manager').value,
-    phone: document.getElementById('phone').value,
+    phone: cleanPhone,
     result: document.getElementById('result').value,
     comment: document.getElementById('comment').value,
     next_action: document.getElementById('next_action').value,
