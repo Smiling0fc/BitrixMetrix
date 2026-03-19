@@ -222,9 +222,10 @@ async function send() {
     navigator.vibrate(30);
   }
 
-  const data = {
-    const rawPhone = document.getElementById('phone').value;
+  const rawPhone = document.getElementById('phone').value;
   const cleanPhone = rawPhone.replace(/\D/g, '');
+  const data = {
+    
     manager: document.getElementById('manager').value,
     phone: cleanPhone,
     result: document.getElementById('result').value,
