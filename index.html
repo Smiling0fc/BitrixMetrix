@@ -92,6 +92,9 @@
       font-size: 14px;
       opacity: 0.8;
     }
+    .error {
+      border-color: red;
+    }
   </style>
 </head>
 
@@ -189,7 +192,8 @@
 </select>
 
 <input id="next_contact_at" type="datetime-local">
-
+  
+  
 <button onclick="send()">Сохранить</button>
 
 <p id="status"></p>
@@ -210,6 +214,7 @@ function updateLogo() {
 window.onload = () => {
   document.getElementById('manager').value = getParam('manager');
   document.getElementById('phone').value = getParam('phone');
+  document.getElementById('phone').focus();
   updateLogo();
 };
 
@@ -217,31 +222,57 @@ window.matchMedia('(prefers-color-scheme: dark)')
   .addEventListener('change', updateLogo);
 
 async function send() {
+  const btn = document.querySelector('button');
+  const status = document.getElementById('status');
+
+  btn.disabled = true;
 
   if (navigator.vibrate) {
     navigator.vibrate(30);
   }
 
-  const rawPhone = document.getElementById('phone').value;
+  const rawPhone = phoneEl.value;
   const cleanPhone = rawPhone.replace(/\D/g, '');
+  const comment = document.getElementById('comment').value;
+
+  if (cleanPhone.length < 11) {
+    phoneEl.classList.add('error');
+    status.innerText = 'Введите корректный номер';
+    btn.disabled = false;
+    return;
+  } else {
+    phoneEl.classList.remove('error');
+  }
+
+  if (!comment.trim()) {
+    status.innerText = 'Введите вопрос клиента';
+    btn.disabled = false;
+    return;
+  }
+
   const data = {
-    
     manager: document.getElementById('manager').value,
     phone: cleanPhone,
     result: document.getElementById('result').value,
-    comment: document.getElementById('comment').value,
+    comment: comment,
     next_action: document.getElementById('next_action').value,
     next_contact_at: document.getElementById('next_contact_at').value
   };
 
-  const status = document.getElementById('status');
   status.innerText = 'Отправка...';
 
   try {
     const res = await fetch(WEBHOOK, {
-      method: 'POST',
-      body: JSON.stringify(data)
-    });
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+      },
+    body: JSON.stringify(data)
+  });
+
+    if (!res.ok) {
+      throw new Error('Server error');
+    }
 
     const json = await res.json();
 
@@ -254,7 +285,7 @@ async function send() {
 
       setTimeout(() => {
         document.getElementById('comment').value = '';
-        document.getElementById('phone').value = '';
+        phoneEl.value = '';
         document.getElementById('next_contact_at').value = '';
       }, 500);
 
@@ -269,13 +300,14 @@ async function send() {
   } catch (e) {
     status.innerText = 'Ошибка сети';
   }
+
+  btn.disabled = false;
 }
 const phoneInput = document.getElementById('phone');
 
 phoneInput.addEventListener('input', function () {
   let value = this.value.replace(/\D/g, '');
 
-  // всегда начинаем с 7
   if (value.startsWith('8')) value = '7' + value.slice(1);
   if (!value.startsWith('7')) value = '7' + value;
 
@@ -296,7 +328,6 @@ phoneInput.addEventListener('input', function () {
 
   this.value = formatted;
 });
-</script>
 
 </body>
 </html>
