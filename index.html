@@ -3,26 +3,9 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="UTF-8">
-    <div class="header">
-    <img src="logo.png" alt="logo">
-    <h2>Метрики звонка</h2>
-  </div>
+  <title>Метрики звонка</title>
 
   <style>
-    .header {
-  text-align: center;
-  margin-bottom: 20px;
-    }
-
-  @media (prefers-color-scheme: dark) {
-    .header img {
-      filter: brightness(0.9);
-          }
-    }
-
-    .header h2 {
-      margin: 0;
-    }
     :root {
       --bg: #ffffff;
       --text: #000000;
@@ -48,8 +31,30 @@
       color: var(--text);
     }
 
-    h2 {
-      margin-bottom: 16px;
+    /* HEADER */
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .header img {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      background: #ffffff;
+      padding: 6px;
+      object-fit: contain;
+      margin-bottom: 8px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .header img {
+        background: #1c1c1e;
+      }
+    }
+
+    .header h2 {
+      margin: 0;
     }
 
     select, input, textarea {
@@ -99,6 +104,11 @@
 </head>
 
 <body>
+
+<div class="header">
+  <img src="logo.png" alt="logo">
+  <h2>Метрики звонка</h2>
+</div>
 
 <select id="manager">
   <option>Максакова Анна</option>
@@ -199,7 +209,6 @@ window.onload = () => {
 
 async function send() {
 
-  // вибрация при нажатии
   if (navigator.vibrate) {
     navigator.vibrate(30);
   }
@@ -227,19 +236,16 @@ async function send() {
     if (json.success) {
       status.innerText = 'Сохранено';
 
-      // вибрация успеха
       if (navigator.vibrate) {
         navigator.vibrate([20, 50, 20]);
       }
 
-      // очистка формы
       setTimeout(() => {
         document.getElementById('comment').value = '';
         document.getElementById('phone').value = '';
         document.getElementById('next_contact_at').value = '';
       }, 500);
 
-      // возврат назад
       setTimeout(() => {
         history.back();
       }, 1200);
