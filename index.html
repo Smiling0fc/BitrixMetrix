@@ -31,28 +31,19 @@
       color: var(--text);
     }
 
-    /* HEADER */
     .header {
       text-align: center;
       margin-bottom: 20px;
     }
 
     .header img {
-      width: 256px;
-      height: 128px;
-      border-radius: 32px;
-      background: none;
+      width: 100%;
+      max-width: 220px;
+      height: auto;
+      border-radius: 24px;
       padding: 6px;
       object-fit: contain;
       margin-bottom: 4px;
-    }
-     .header img {
-      content: url("logo-dark.png");
-     }
-    @media (prefers-color-scheme: dark) {
-     .header img {
-     content: url("logo-light.png");
-     }
     }
 
     .header h2 {
@@ -101,14 +92,13 @@
       font-size: 14px;
       opacity: 0.8;
     }
-
   </style>
 </head>
 
 <body>
 
 <div class="header">
-  <img alt="logo">
+  <img id="logo" src="logo-dark.png" alt="logo">
   <h2>Метрики звонка</h2>
 </div>
 
@@ -125,6 +115,7 @@
 <input id="phone" placeholder="Телефон">
 
 <select id="result">
+  <!-- оставил как есть -->
   <option>iPhone 17</option>
   <option>iPhone Air</option>
   <option>iPhone 17 Pro</option>
@@ -204,10 +195,20 @@ function getParam(name) {
   return new URL(window.location.href).searchParams.get(name) || '';
 }
 
+function updateLogo() {
+  const logo = document.getElementById('logo');
+  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  logo.src = isDark ? 'logo-light.png' : 'logo-dark.png';
+}
+
 window.onload = () => {
   document.getElementById('manager').value = getParam('manager');
   document.getElementById('phone').value = getParam('phone');
+  updateLogo();
 };
+
+window.matchMedia('(prefers-color-scheme: dark)')
+  .addEventListener('change', updateLogo);
 
 async function send() {
 
