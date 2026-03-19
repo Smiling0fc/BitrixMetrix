@@ -217,6 +217,31 @@ window.onload = () => {
   document.getElementById('manager').value = getParam('manager');
   document.getElementById('phone').value = getParam('phone');
   document.getElementById('phone').focus();
+  const phoneInput = document.getElementById('phone');
+
+phoneInput.addEventListener('input', function () {
+  let value = this.value.replace(/\D/g, '');
+
+  if (value.startsWith('8')) value = '7' + value.slice(1);
+  if (!value.startsWith('7')) value = '7' + value;
+
+  let formatted = '+7';
+
+  if (value.length > 1) {
+    formatted += ' (' + value.substring(1, 4);
+  }
+  if (value.length >= 5) {
+    formatted += ') ' + value.substring(4, 7);
+  }
+  if (value.length >= 8) {
+    formatted += '-' + value.substring(7, 9);
+  }
+  if (value.length >= 10) {
+    formatted += '-' + value.substring(9, 11);
+  }
+
+  this.value = formatted;
+});
   updateLogo();
 };
 
@@ -305,31 +330,7 @@ async function send() {
 
   btn.disabled = false;
 }
-const phoneInput = document.getElementById('phone');
 
-phoneInput.addEventListener('input', function () {
-  let value = this.value.replace(/\D/g, '');
-
-  if (value.startsWith('8')) value = '7' + value.slice(1);
-  if (!value.startsWith('7')) value = '7' + value;
-
-  let formatted = '+7';
-
-  if (value.length > 1) {
-    formatted += ' (' + value.substring(1, 4);
-  }
-  if (value.length >= 5) {
-    formatted += ') ' + value.substring(4, 7);
-  }
-  if (value.length >= 8) {
-    formatted += '-' + value.substring(7, 9);
-  }
-  if (value.length >= 10) {
-    formatted += '-' + value.substring(9, 11);
-  }
-
-  this.value = formatted;
-});
 
 </body>
 </html>
