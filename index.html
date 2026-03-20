@@ -80,7 +80,33 @@
       cursor: pointer;
       transition: transform 0.1s ease, opacity 0.1s ease;
     }
+    .input-wrapper {
+      position: relative;
+    }
 
+    .clear-btn {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+  
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: none;
+
+      background: #8e8e93;
+      color: white;
+      font-size: 16px;
+      line-height: 24px;
+
+      display: none;
+      cursor: pointer;
+    }
+
+    .clear-btn:active {
+      opacity: 0.7;
+    }
     button:active {
       transform: scale(0.97);
       opacity: 0.8;
@@ -115,11 +141,15 @@
   <option>Александр Сервис</option>
 </select>
 
-<input 
-  id="phone" 
-  type="tel" 
-  inputmode="numeric" 
-  placeholder="+7 (___) ___-__-__">
+<div class="input-wrapper">
+  <input 
+    id="phone" 
+    type="tel" 
+    inputmode="numeric" 
+    placeholder="+7 (___) ___-__-__">
+    
+  <button type="button" id="clearPhone" class="clear-btn">×</button>
+</div>
 
 <select id="result">
   <!-- оставил как есть -->
@@ -217,7 +247,20 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('manager').value = getParam('manager');
   phoneInput.value = getParam('phone');
   phoneInput.focus();
+const phoneInput = document.getElementById('phone');
+const clearBtn = document.getElementById('clearPhone');
 
+// показать / скрыть крестик
+phoneInput.addEventListener('input', () => {
+  clearBtn.style.display = phoneInput.value ? 'block' : 'none';
+});
+
+// очистка
+clearBtn.addEventListener('click', () => {
+  phoneInput.value = '';
+  phoneInput.focus();
+  clearBtn.style.display = 'none';
+});
   // МАСКА
   phoneInput.addEventListener('input', function () {
     let value = this.value.replace(/\D/g, '');
