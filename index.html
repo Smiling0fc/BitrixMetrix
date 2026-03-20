@@ -294,25 +294,28 @@ async function send() {
 
     if (!res.ok) throw new Error();
 
-    const json = await res.json();
+const json = await res.json();
 
-    if (json.success) {
-      status.innerText = 'Сохранено';
+if (json.success) {
+  status.innerText = 'Сохранено';
 
-      setTimeout(() => {
-        document.getElementById('comment').value = '';
-        phoneEl.value = '';
-        document.getElementById('next_contact_at').value = '';
-      }, 500);
+  setTimeout(() => {
+    document.getElementById('comment').value = '';
+    phoneEl.value = '';
+    document.getElementById('next_contact_at').value = '';
+  }, 500);
 
-      setTimeout(() => history.back(), 1200);
-    } else {
-      status.innerText = 'Ошибка';
-    }
+  setTimeout(() => history.back(), 1200);
 
-  } catch {
-    status.innerText = 'Ошибка сети';
-  }
+} else {
+  status.innerText = 'Ошибка: ' + (json.error || 'неизвестно');
+  console.error('GAS error:', json);
+}
+
+} catch (e) {
+  status.innerText = 'Ошибка сети';
+  console.error('Fetch error:', e);
+}
 
   btn.disabled = false;
 }
