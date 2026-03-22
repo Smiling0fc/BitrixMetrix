@@ -213,12 +213,17 @@ function updateLogo() {
 
 document.addEventListener('DOMContentLoaded', () => {
   const phoneInput = document.getElementById('phone');
+  const clearBtn = document.getElementById('clearPhone');
 
   document.getElementById('manager').value = getParam('manager');
   phoneInput.value = getParam('phone');
   phoneInput.focus();
 
-  // МАСКА
+  function updateClearBtn() {
+    clearBtn.style.display = phoneInput.value.length > 0 ? 'block' : 'none';
+  }
+
+  // МАСКА + обновление крестика
   phoneInput.addEventListener('input', function () {
     let value = this.value.replace(/\D/g, '');
 
@@ -241,11 +246,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     this.value = formatted;
+
+    updateClearBtn();
   });
 
+  clearBtn.addEventListener('click', () => {
+    phoneInput.value = '';
+    phoneInput.focus();
+    updateClearBtn();
+  });
+
+  updateClearBtn();
   updateLogo();
 });
-
 window.matchMedia('(prefers-color-scheme: dark)')
   .addEventListener('change', updateLogo);
 
