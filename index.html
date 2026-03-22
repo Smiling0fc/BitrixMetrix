@@ -243,25 +243,16 @@ function updateLogo() {
 
 document.addEventListener('DOMContentLoaded', () => {
   const phoneInput = document.getElementById('phone');
+  const clearBtn = document.getElementById('clearPhone');
 
   document.getElementById('manager').value = getParam('manager');
   phoneInput.value = getParam('phone');
   phoneInput.focus();
-const phoneInput = document.getElementById('phone');
-const clearBtn = document.getElementById('clearPhone');
 
-// показать / скрыть крестик
-phoneInput.addEventListener('input', () => {
-  clearBtn.style.display = phoneInput.value ? 'block' : 'none';
-});
+  function updateClearBtn() {
+    clearBtn.style.display = phoneInput.value.length > 0 ? 'block' : 'none';
+  }
 
-// очистка
-clearBtn.addEventListener('click', () => {
-  phoneInput.value = '';
-  phoneInput.focus();
-  clearBtn.style.display = 'none';
-});
-  // МАСКА
   phoneInput.addEventListener('input', function () {
     let value = this.value.replace(/\D/g, '');
 
@@ -284,9 +275,20 @@ clearBtn.addEventListener('click', () => {
     }
 
     this.value = formatted;
+
+    updateClearBtn(); // ← тут же обновляем крестик
   });
 
+  clearBtn.addEventListener('click', () => {
+    phoneInput.value = '';
+    phoneInput.focus();
+    updateClearBtn();
+  });
+
+  updateClearBtn(); // ← при загрузке
+
   updateLogo();
+});
 });
 
 window.matchMedia('(prefers-color-scheme: dark)')
