@@ -1,107 +1,89 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta charset="UTF-8">
-  <title>Метрики звонка</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Метрики звонка</title>
 
-  <style>
-    :root {
-      --bg: #ffffff;
-      --text: #000000;
-      --border: #d1d1d6;
-      --input-bg: #ffffff;
-    }
+<style>
+:root {
+  --bg: #ffffff;
+  --text: #000000;
+  --border: #d1d1d6;
+  --input-bg: #ffffff;
+}
 
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #000000;
-        --text: #ffffff;
-        --border: #3a3a3c;
-        --input-bg: #2c2c2e;
-      }
-    }
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #000000;
+    --text: #ffffff;
+    --border: #3a3a3c;
+    --input-bg: #2c2c2e;
+  }
+}
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, Arial;
-      max-width: 500px;
-      margin: 20px auto;
-      padding: 16px;
-      background: var(--bg);
-      color: var(--text);
-    }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, Arial;
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 16px;
+  background: var(--bg);
+  color: var(--text);
+}
 
-    .header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
 
-    .header img {
-      width: 100%;
-      max-width: 220px;
-      height: auto;
-      border-radius: 24px;
-      padding: 6px;
-      object-fit: contain;
-      margin-bottom: 4px;
-    }
+.header img {
+  width: 100%;
+  max-width: 220px;
+  border-radius: 24px;
+  padding: 6px;
+}
 
-    .header h2 {
-      margin: 0;
-    }
+select, input, textarea {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--input-bg);
+  color: var(--text);
+}
 
-    select, input, textarea {
-      width: 100%;
-      padding: 14px;
-      margin-top: 10px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: var(--input-bg);
-      color: var(--text);
-      font-size: 16px;
-      box-sizing: border-box;
-    }
+button {
+  width: 100%;
+  padding: 16px;
+  margin-top: 16px;
+  border-radius: 12px;
+  border: none;
+  background: #0a84ff;
+  color: white;
+  cursor: pointer;
+}
 
-    textarea {
-      min-height: 80px;
-      resize: vertical;
-    }
+#clearPhone {
+  display: none;
+  background: #8e8e93;
+}
 
-    button {
-      width: 100%;
-      padding: 16px;
-      margin-top: 16px;
-      border-radius: 12px;
-      border: none;
-      background: #0a84ff;
-      color: white;
-      font-size: 16px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: transform 0.1s ease, opacity 0.1s ease;
-    }
+.error {
+  border-color: red;
+}
 
-    button:active {
-      transform: scale(0.97);
-      opacity: 0.8;
-    }
-
-    #status {
-      text-align: center;
-      margin-top: 10px;
-      font-size: 14px;
-      opacity: 0.8;
-    }
-    .error {
-      border-color: red;
-    }
-  </style>
+#status {
+  text-align: center;
+  margin-top: 10px;
+}
+</style>
 </head>
 
 <body>
 
 <div class="header">
-  <img id="logo" src="logo-dark.png" alt="logo">
+  <img id="logo" src="logo-dark.png">
   <h2>Метрики звонка</h2>
 </div>
 
@@ -115,65 +97,15 @@
   <option>Александр Сервис</option>
 </select>
 
-<input 
-  id="phone" 
-  type="tel" 
-  inputmode="numeric" 
-  placeholder="+7 (___) ___-__-__">
+<input id="phone" type="tel" placeholder="+7 (___) ___-__-__">
+<button id="clearPhone" type="button">Очистить номер</button>
 
 <select id="result">
-  <!-- оставил как есть -->
   <option>iPhone 17</option>
-  <option>iPhone Air</option>
   <option>iPhone 17 Pro</option>
   <option>iPhone 17 Pro Max</option>
   <option>iPhone 16</option>
-  <option>iPhone 16 Plus</option>
-  <option>iPhone 16 Pro</option>
-  <option>iPhone 16 Pro Max</option>
   <option>iPhone 15</option>
-  <option>iPhone 15 Plus</option>
-  <option>iPhone 14</option>
-  <option>iPhone 13</option>
-  <option>iPad A16</option>
-  <option>iPad Air M3 11</option>
-  <option>iPad Pro M4 11</option>
-  <option>iPad Air M3 13</option>
-  <option>iPad Pro M4 13</option>
-  <option>iPad Air M4 11</option>
-  <option>iPad Pro M5 11</option>
-  <option>iPad Air M4 13</option>
-  <option>iPad Pro M5 13</option>
-  <option>MacBook Air M2 13</option>
-  <option>MacBook Air M2 15</option>
-  <option>MacBook Air M3 13</option>
-  <option>MacBook Air M3 15</option>
-  <option>MacBook Pro M5 14</option>
-  <option>MacBook Pro M5 16</option>
-  <option>MacBook Air M4 13</option>
-  <option>MacBook Air M4 15</option>
-  <option>MacBook Pro M4 14</option>
-  <option>MacBook Pro M4 Pro 16</option>
-  <option>MacBook Air M5 13</option>
-  <option>MacBook Air M5 15</option>
-  <option>MacBook Neo 13</option>
-  <option>Apple Watch SE 2</option>
-  <option>Apple Watch SE 3</option>
-  <option>Apple Watch Series 10 42mm</option>
-  <option>Apple Watch Series 10 46mm</option>
-  <option>Apple Watch Series 11 42mm</option>
-  <option>Apple Watch Series 11 46mm</option>
-  <option>Apple Watch Ultra 2 49mm</option>
-  <option>Apple Watch Ultra 3 49mm</option>
-  <option>Apple Pencil Lightning</option>
-  <option>Apple Pencil Type-C</option>
-  <option>Apple Pencil 2</option>
-  <option>Apple Pencil Pro</option>
-  <option>Apple Magic Keyboard</option>
-  <option>Нецелевой звонок</option>
-  <option>Установить приложения</option>
-  <option>Сервис</option>
-  <option>Перезвонить</option>
   <option>Слив</option>
   <option>Отказ</option>
 </select>
@@ -185,105 +117,65 @@
   <option>Вопрос решен</option>
   <option>Перезвонить</option>
   <option>Свяжется позже</option>
-  <option>Перевод на ТРЦ</option>
-  <option>Перевод на сервис</option>
   <option>Слив</option>
-  <option>Негативный клиент</option>
 </select>
 
 <input id="next_contact_at" type="datetime-local">
-  
-  
-<button onclick="send()">Сохранить</button>
+
+<button id="sendBtn" type="button">Сохранить</button>
 
 <p id="status"></p>
 
 <script>
 const WEBHOOK = 'https://script.google.com/macros/s/AKfycbwCAitlunN0dr5W9JcjoqSA4osxla1mTXm5J1kD_hCZ4pMyYqs4fg2Nfq5f5QvWjuk/exec';
 
-function getParam(name) {
-  return new URL(window.location.href).searchParams.get(name) || '';
-}
+const phone = document.getElementById('phone');
+const clearBtn = document.getElementById('clearPhone');
+const btn = document.getElementById('sendBtn');
+const status = document.getElementById('status');
 
-function updateLogo() {
-  const logo = document.getElementById('logo');
-  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  logo.src = isDark ? 'logo-light.png' : 'logo-dark.png';
-}
+// --- маска
+phone.addEventListener('input', () => {
+  let v = phone.value.replace(/\D/g, '');
 
-document.addEventListener('DOMContentLoaded', () => {
-  const phoneInput = document.getElementById('phone');
-  const clearBtn = document.getElementById('clearPhone');
+  if (v.startsWith('8')) v = '7' + v.slice(1);
+  if (!v.startsWith('7')) v = '7' + v;
 
-  document.getElementById('manager').value = getParam('manager');
-  phoneInput.value = getParam('phone');
-  phoneInput.focus();
+  let res = '+7';
 
-  function updateClearBtn() {
-    clearBtn.style.display = phoneInput.value.length > 0 ? 'block' : 'none';
-  }
+  if (v.length > 1) res += ' (' + v.slice(1,4);
+  if (v.length >= 5) res += ') ' + v.slice(4,7);
+  if (v.length >= 8) res += '-' + v.slice(7,9);
+  if (v.length >= 10) res += '-' + v.slice(9,11);
 
-  // МАСКА + обновление крестика
-  phoneInput.addEventListener('input', function () {
-    let value = this.value.replace(/\D/g, '');
-
-    if (value.startsWith('8')) value = '7' + value.slice(1);
-    if (!value.startsWith('7')) value = '7' + value;
-
-    let formatted = '+7';
-
-    if (value.length > 1) {
-      formatted += ' (' + value.substring(1, 4);
-    }
-    if (value.length >= 5) {
-      formatted += ') ' + value.substring(4, 7);
-    }
-    if (value.length >= 8) {
-      formatted += '-' + value.substring(7, 9);
-    }
-    if (value.length >= 10) {
-      formatted += '-' + value.substring(9, 11);
-    }
-
-    this.value = formatted;
-
-    updateClearBtn();
-  });
-
-  clearBtn.addEventListener('click', () => {
-    phoneInput.value = '';
-    phoneInput.focus();
-    updateClearBtn();
-  });
-
-  updateClearBtn();
-  updateLogo();
+  phone.value = res;
+  clearBtn.style.display = phone.value ? 'block' : 'none';
 });
-window.matchMedia('(prefers-color-scheme: dark)')
-  .addEventListener('change', updateLogo);
 
-async function send() {
-  const btn = document.querySelector('button');
-  const status = document.getElementById('status');
-  const phoneEl = document.getElementById('phone');
+// --- очистка
+clearBtn.onclick = () => {
+  phone.value = '';
+  phone.focus();
+  clearBtn.style.display = 'none';
+};
 
+// --- отправка
+btn.onclick = async () => {
   btn.disabled = true;
+  status.textContent = 'Отправка...';
 
-  const rawPhone = phoneEl.value;
-  const cleanPhone = rawPhone.replace(/\D/g, '');
-  const comment = document.getElementById('comment').value;
+  const cleanPhone = phone.value.replace(/\D/g, '');
+  const comment = document.getElementById('comment').value.trim();
 
   if (cleanPhone.length < 11) {
-    phoneEl.classList.add('error');
-    status.innerText = 'Введите корректный номер';
+    phone.classList.add('error');
+    status.textContent = 'Неверный номер';
     btn.disabled = false;
     return;
-  } else {
-    phoneEl.classList.remove('error');
   }
 
-  if (!comment.trim()) {
-    status.innerText = 'Введите вопрос клиента';
+  if (!comment) {
+    status.textContent = 'Введите комментарий';
     btn.disabled = false;
     return;
   }
@@ -297,43 +189,37 @@ async function send() {
     next_contact_at: document.getElementById('next_contact_at').value
   };
 
-  status.innerText = 'Отправка...';
-
   try {
     const res = await fetch(WEBHOOK, {
       method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
-      });
+    });
 
-    if (!res.ok) throw new Error();
+    const text = await res.text();
+    let json = {};
 
-    const json = await res.json();
+    try { json = JSON.parse(text); } catch {}
 
-const json = await res.json();
+    if (json.success) {
+      status.textContent = 'Сохранено';
+      phone.value = '';
+      document.getElementById('comment').value = '';
+      document.getElementById('next_contact_at').value = '';
+      clearBtn.style.display = 'none';
 
-if (json.success) {
-  status.innerText = 'Сохранено';
+      setTimeout(() => history.back(), 1000);
+    } else {
+      status.textContent = 'Ошибка сервера';
+    }
 
-  setTimeout(() => {
-    document.getElementById('comment').value = '';
-    phoneEl.value = '';
-    document.getElementById('next_contact_at').value = '';
-  }, 500);
-
-  setTimeout(() => history.back(), 1200);
-
-} else {
-  status.innerText = 'Ошибка: ' + (json.error || 'неизвестно');
-  console.error('GAS error:', json);
-}
-
-} catch (e) {
-  status.innerText = 'Ошибка сети';
-  console.error('Fetch error:', e);
-}
+  } catch (e) {
+    status.textContent = 'Ошибка сети';
+  }
 
   btn.disabled = false;
-}
+};
 </script>
+
 </body>
 </html>
