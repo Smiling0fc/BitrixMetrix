@@ -209,7 +209,13 @@
 
 <script>
 const WEBHOOK = 'https://script.google.com/macros/s/AKfycbwCAitlunN0dr5W9JcjoqSA4osxla1mTXm5J1kD_hCZ4pMyYqs4fg2Nfq5f5QvWjuk/exec';
+function goToChats() {
+  const manager = document.getElementById('manager').value;
+  const phone = document.getElementById('phone').value.replace(/\D/g, '');
 
+  const url = `chat.html?manager=${encodeURIComponent(manager)}&phone=${phone}`;
+  window.location.href = url;
+}
 function getParam(name) {
   return new URL(window.location.href).searchParams.get(name) || '';
 }
