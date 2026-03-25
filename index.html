@@ -30,7 +30,15 @@
       background: var(--bg);
       color: var(--text);
     }
-
+    .menu-btn {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    font-size: 22px;
+    cursor: pointer;
+    z-index: 1000;
+    padding: 6px 10px;
+    }
     .header {
       text-align: center;
       margin-bottom: 20px;
@@ -99,6 +107,7 @@
 </head>
 
 <body>
+<div class="menu-btn" onclick="goToChats()">☰</div>
 
 <div class="header">
   <img id="logo" src="logo-dark.png" alt="logo">
