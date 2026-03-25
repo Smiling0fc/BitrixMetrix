@@ -211,12 +211,40 @@ function updateLogo() {
   logo.src = isDark ? 'logo-light.png' : 'logo-dark.png';
 }
 
-window.onload = () => {
+document.addEventListener('DOMContentLoaded', () => {
+  const phoneInput = document.getElementById('phone');
+
   document.getElementById('manager').value = getParam('manager');
-  document.getElementById('phone').value = getParam('phone');
-  document.getElementById('phone').focus();
+  phoneInput.value = getParam('phone');
+  phoneInput.focus();
+
+  // МАСКА
+  phoneInput.addEventListener('input', function () {
+    let value = this.value.replace(/\D/g, '');
+
+    if (value.startsWith('8')) value = '7' + value.slice(1);
+    if (!value.startsWith('7')) value = '7' + value;
+
+    let formatted = '+7';
+
+    if (value.length > 1) {
+      formatted += ' (' + value.substring(1, 4);
+    }
+    if (value.length >= 5) {
+      formatted += ') ' + value.substring(4, 7);
+    }
+    if (value.length >= 8) {
+      formatted += '-' + value.substring(7, 9);
+    }
+    if (value.length >= 10) {
+      formatted += '-' + value.substring(9, 11);
+    }
+
+    this.value = formatted;
+  });
+
   updateLogo();
-};
+});
 
 window.matchMedia('(prefers-color-scheme: dark)')
   .addEventListener('change', updateLogo);
@@ -224,12 +252,9 @@ window.matchMedia('(prefers-color-scheme: dark)')
 async function send() {
   const btn = document.querySelector('button');
   const status = document.getElementById('status');
+  const phoneEl = document.getElementById('phone');
 
   btn.disabled = true;
-
-  if (navigator.vibrate) {
-    navigator.vibrate(30);
-  }
 
   const rawPhone = phoneEl.value;
   const cleanPhone = rawPhone.replace(/\D/g, '');
@@ -263,25 +288,16 @@ async function send() {
 
   try {
     const res = await fetch(WEBHOOK, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-      },
-    body: JSON.stringify(data)
-  });
+      method: 'POST',
+      body: JSON.stringify(data)
+      });
 
-    if (!res.ok) {
-      throw new Error('Server error');
-    }
+    if (!res.ok) throw new Error();
 
     const json = await res.json();
 
     if (json.success) {
       status.innerText = 'Сохранено';
-
-      if (navigator.vibrate) {
-        navigator.vibrate([20, 50, 20]);
-      }
 
       setTimeout(() => {
         document.getElementById('comment').value = '';
@@ -289,45 +305,17 @@ async function send() {
         document.getElementById('next_contact_at').value = '';
       }, 500);
 
-      setTimeout(() => {
-        history.back();
-      }, 1200);
-
+      setTimeout(() => history.back(), 1200);
     } else {
       status.innerText = 'Ошибка';
     }
 
-  } catch (e) {
+  } catch {
     status.innerText = 'Ошибка сети';
   }
 
   btn.disabled = false;
 }
-const phoneInput = document.getElementById('phone');
-
-phoneInput.addEventListener('input', function () {
-  let value = this.value.replace(/\D/g, '');
-
-  if (value.startsWith('8')) value = '7' + value.slice(1);
-  if (!value.startsWith('7')) value = '7' + value;
-
-  let formatted = '+7';
-
-  if (value.length > 1) {
-    formatted += ' (' + value.substring(1, 4);
-  }
-  if (value.length >= 5) {
-    formatted += ') ' + value.substring(4, 7);
-  }
-  if (value.length >= 8) {
-    formatted += '-' + value.substring(7, 9);
-  }
-  if (value.length >= 10) {
-    formatted += '-' + value.substring(9, 11);
-  }
-
-  this.value = formatted;
-});
-
+</script>
 </body>
 </html>
