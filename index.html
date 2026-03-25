@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -30,15 +31,7 @@
       background: var(--bg);
       color: var(--text);
     }
-    .menu-btn {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    font-size: 22px;
-    cursor: pointer;
-    z-index: 1000;
-    padding: 6px 10px;
-    }
+
     .header {
       text-align: center;
       margin-bottom: 20px;
@@ -107,7 +100,6 @@
 </head>
 
 <body>
-<div class="menu-btn" onclick="goToChats()">☰</div>
 
 <div class="header">
   <img id="logo" src="logo-dark.png" alt="logo">
@@ -210,14 +202,6 @@
 <script>
 const WEBHOOK = 'https://script.google.com/macros/s/AKfycbwCAitlunN0dr5W9JcjoqSA4osxla1mTXm5J1kD_hCZ4pMyYqs4fg2Nfq5f5QvWjuk/exec';
 
-function goToChats() {
-  const manager = document.getElementById('manager').value;
-  const phone = document.getElementById('phone').value.replace(/\D/g, '');
-
-  const url = `chat.html?manager=${encodeURIComponent(manager)}&phone=${phone}`;
-  window.location.href = url;
-}
-  
 function getParam(name) {
   return new URL(window.location.href).searchParams.get(name) || '';
 }
