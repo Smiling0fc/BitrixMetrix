@@ -1,18 +1,130 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Метрики чата</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>Метрики чата</title>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #000000;
+      --border: #d1d1d6;
+      --input-bg: #ffffff;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #000000;
+        --text: #ffffff;
+        --border: #3a3a3c;
+        --input-bg: #2c2c2e;
+      }
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, Arial;
+      max-width: 500px;
+      margin: 20px auto;
+      padding: 16px;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .header h2 {
+      margin: 0;
+    }
+
+    /* КНОПКА НАЗАД */
+    .back-btn {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 10px;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+    }
+
+    select, input, textarea {
+      width: 100%;
+      padding: 14px;
+      margin-top: 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--input-bg);
+      color: var(--text);
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      margin-top: 16px;
+      border-radius: 12px;
+      border: none;
+      background: #0a84ff;
+      color: white;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: transform 0.1s ease, opacity 0.1s ease;
+    }
+
+    button:active {
+      transform: scale(0.97);
+      opacity: 0.8;
+    }
+
+    #status {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+
+    .error {
+      border-color: red;
+    }
+  </style>
 </head>
 
 <body>
 
-<h2>Завершение чата</h2>
+<div class="back-btn" onclick="goBack()">←</div>
 
-<select id="manager"></select>
+<div class="header">
+  <h2>Метрики чата</h2>
+</div>
 
-<input id="phone" type="tel" placeholder="Телефон">
+<select id="manager">
+  <option>Максакова Анна</option>
+  <option>Вискарев Дмитрий</option>
+  <option>Корчагин Андрей</option>
+  <option>Кочнев Алексей</option>
+  <option>Савушкин Константин</option>
+  <option>Ахатов Руслан</option>
+  <option>Александр Сервис</option>
+</select>
+
+<input 
+  id="phone" 
+  type="tel" 
+  inputmode="numeric" 
+  placeholder="+7 (___) ___-__-__">
 
 <textarea id="comment" placeholder="Суть диалога"></textarea>
 
@@ -34,26 +146,102 @@ function getParam(name) {
   return new URL(window.location.href).searchParams.get(name) || '';
 }
 
+// КНОПКА НАЗАД
+function goBack() {
+  window.location.href = 'index.html';
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  const phoneInput = document.getElementById('phone');
+
   document.getElementById('manager').value = getParam('manager');
-  document.getElementById('phone').value = getParam('phone');
+  phoneInput.value = getParam('phone');
+
+  // маска телефона (как в звонках)
+  phoneInput.addEventListener('input', function () {
+    let value = this.value.replace(/\D/g, '');
+
+    if (value.startsWith('8')) value = '7' + value.slice(1);
+    if (!value.startsWith('7')) value = '7' + value;
+
+    let formatted = '+7';
+
+    if (value.length > 1) {
+      formatted += ' (' + value.substring(1, 4);
+    }
+    if (value.length >= 5) {
+      formatted += ') ' + value.substring(4, 7);
+    }
+    if (value.length >= 8) {
+      formatted += '-' + value.substring(7, 9);
+    }
+    if (value.length >= 10) {
+      formatted += '-' + value.substring(9, 11);
+    }
+
+    this.value = formatted;
+  });
 });
 
 async function send() {
+  const btn = document.querySelector('button');
+  const status = document.getElementById('status');
+  const phoneEl = document.getElementById('phone');
+
+  btn.disabled = true;
+
+  const cleanPhone = phoneEl.value.replace(/\D/g, '');
+  const comment = document.getElementById('comment').value;
+
+  if (cleanPhone.length < 11) {
+    phoneEl.classList.add('error');
+    status.innerText = 'Введите корректный номер';
+    btn.disabled = false;
+    return;
+  } else {
+    phoneEl.classList.remove('error');
+  }
+
+  if (!comment.trim()) {
+    status.innerText = 'Введите суть диалога';
+    btn.disabled = false;
+    return;
+  }
+
   const data = {
-    type: 'chat', // ВАЖНО для гибрида
+    type: 'chat',
     manager: document.getElementById('manager').value,
-    phone: document.getElementById('phone').value.replace(/\D/g, ''),
-    comment: document.getElementById('comment').value,
+    phone: cleanPhone,
+    comment: comment,
     result: document.getElementById('result').value
   };
 
-  await fetch(WEBHOOK, {
-    method: 'POST',
-    body: JSON.stringify(data)
-  });
+  status.innerText = 'Отправка...';
 
-  document.getElementById('status').innerText = 'Сохранено';
+  try {
+    const res = await fetch(WEBHOOK, {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+
+    if (!res.ok) throw new Error();
+
+    status.innerText = 'Сохранено';
+
+    setTimeout(() => {
+      document.getElementById('comment').value = '';
+      phoneEl.value = '';
+    }, 500);
+
+    setTimeout(() => {
+      window.location.href = 'index.html';
+    }, 1200);
+
+  } catch {
+    status.innerText = 'Ошибка сети';
+  }
+
+  btn.disabled = false;
 }
 </script>
 
